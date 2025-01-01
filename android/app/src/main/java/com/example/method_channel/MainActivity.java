@@ -17,9 +17,9 @@ public class MainActivity extends FlutterActivity {
     @Override
     public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
         super.configureFlutterEngine(flutterEngine);
-        ActivityCompat.requestPermissions(this, 
-        new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.FOREGROUND_SERVICE_LOCATION,Manifest.permission.POST_NOTIFICATIONS}, 
-        PERMISSION_REQUEST_CODE);
+        // ActivityCompat.requestPermissions(this, 
+        // new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.FOREGROUND_SERVICE_LOCATION,Manifest.permission.POST_NOTIFICATIONS}, 
+        // PERMISSION_REQUEST_CODE);
         new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), CHANNEL)
                 .setMethodCallHandler(
                         (call, result) -> {

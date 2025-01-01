@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,6 +35,31 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   static const platform = MethodChannel('com.example.native_bridge');
 
+  @override
+  initState() {
+    super.initState();
+    requestPermissions();
+  }
+
+  Future<void> requestPermissions() async {
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.location,
+      Permission.notification,
+    ].request();
+
+    if (statuses[Permission.location]!.isGranted) {
+      print('Location permission granted');
+    } else {
+      print('Location permission denied');
+    }
+
+    if (statuses[Permission.notification]!.isGranted) {
+      print('Notification permission granted');
+    } else {
+      print('Notification permission denied');
+    }
+  }
+
   // Method to call native code
   Future play() async {
     try {
@@ -56,10 +82,30 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _incrementCounter() async {
-    await play();
+    List<Permission> statuses = [
+      Permission.location,
+      Permission.notification,
+    ];
     setState(() {
       _counter++;
     });
+    if (await statuses[0].isGranted == false ||
+        await statuses[1].isGranted == false) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please grant all permissions'),
+          ),
+        );
+        await Future.delayed(const Duration(seconds: 2), () {
+          openAppSettings();
+        });
+      }
+
+      return;
+    }
+
+    await play();
   }
 
   @override
